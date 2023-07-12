@@ -1,4 +1,9 @@
-const guitarFrets = [
+import data from 'data/data.json';
+import { flattenChords } from './helpers';
+
+const parseData = JSON.parse(JSON.stringify(data));
+
+export const guitarFrets = [
 	// E string
 	[
 		'E2',
@@ -169,89 +174,10 @@ const guitarFrets = [
 	],
 ];
 
-export const tuning = ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'];
-export const keys = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
-export const suffixes = [
-	'major',
-	'minor',
-	'dim',
-	'dim7',
-	'sus2',
-	'sus4',
-	'sus2sus4',
-	'7sus4',
-	'7/G',
-	'alt',
-	'aug',
-	'5',
-	'6',
-	'69',
-	'7',
-	'7b5',
-	'aug7',
-	'9',
-	'9b5',
-	'aug9',
-	'7b9',
-	'7#9',
-	'11',
-	'9#11',
-	'13',
-	'maj7',
-	'maj7b5',
-	'maj7#5',
-	'maj9',
-	'maj11',
-	'maj13',
-	'm6',
-	'm69',
-	'm7',
-	'm7b5',
-	'm9',
-	'm11',
-	'mmaj7',
-	'mmaj7b5',
-	'mmaj9',
-	'mmaj11',
-	'add9',
-	'madd9',
-	'/E',
-	'/F',
-	'/F#',
-	'/G',
-	'/G#',
-	'/A',
-	'/Bb',
-	'/B',
-	'/C',
-	'/C#',
-	'm/B',
-	'm/C',
-	'm/C#',
-	'/D',
-	'm/D',
-	'/D#',
-	'm/D#',
-	'm/E',
-	'm/F',
-	'm/F#',
-	'm/G',
-	'm/G#',
-];
-
-
-
-
-function mapChordToFretPositions(chordFretPositions, tuning) {
-	const notes = [];
-	for (let i = 0; i < chordFretPositions.length; i++) {
-		const fretPosition = chordFretPositions[i];
-		const stringIndex = i;
-		const note = guitarFrets[stringIndex][fretPosition];
-		notes.push(note);
-	}
-	return notes;
-}
+export const tuning = parseData.tunings.standard;
+export const keys = parseData.keys;
+export const suffixes = parseData.suffixes;
+export const chords = flattenChords(parseData.chords);
 
 // https://tombatossals.github.io/react-chords/
 // https://github.com/tombatossals/react-chords
