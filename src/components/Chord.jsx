@@ -1,20 +1,34 @@
-import { memo } from 'react';
+import {memo, useCallback, useMemo} from 'react';
 import styled from 'styled-components';
-import { formatChordName } from 'utils/helpers';
+import {guitarFrets} from 'utils/constants';
+import {formatChordName} from 'utils/helpers';
+import PlayChord from './PlayChord';
 
 const SVGText = styled.text`
 	font-family: 'Roboto', sans-serif;
-	font-size: ${({ fontSize }) => fontSize || '0.3rem'};
+	font-size: ${({fontSize}) => fontSize || '0.3rem'};
 	font-weight: 500;
-	fill: ${({ fill }) => fill || '#333'};
+	fill: ${({fill}) => fill || '#333'};
 	text-anchor: middle;
 `;
 
-const ChordComponent = ({ data }) => {
-	const chordData = data.positions[0];
-	const { frets, baseFret } = chordData;
 
-	const generateCircle = (positions) => {
+const ChordComponent = ({data}) => {
+	const chordData = data.positions[0];
+	const {frets, baseFret} = chordData;
+	const chordArr = useMemo(() => {
+		return frets
+			.map((position, stringIndex) => {
+				if (position >= 0) {
+					const chordPos = baseFret > 1 ? position + baseFret : position;
+					return guitarFrets[stringIndex][chordPos];
+				}
+				return null;
+			})
+			.filter((value) => value !== null);
+	}, [frets, baseFret]);
+
+	const generateCircle = useCallback((positions) => {
 		return positions.map((position, index) => {
 			const cx = index * 10; // Calculate cx value based on index
 			if (position === 0) {
@@ -35,11 +49,11 @@ const ChordComponent = ({ data }) => {
 
 			return null; // Skip other positions
 		});
-	};
+	}, []);
 
-	const generateDot = (item) => {
+	const generateDot = useCallback((item) => {
 		const barreHeight = 8.5;
-		const { frets, fingers, barres } = item;
+		const {frets, fingers, barres} = item;
 		const barre = barres[0];
 
 		// Hợp âm chặn
@@ -64,13 +78,13 @@ const ChordComponent = ({ data }) => {
 								<SVGText fill='#fff' fontSize='0.25rem' x={cx} y={cy + 1.5}>
 									{fingers[index]}
 								</SVGText>
-							</g>
+							</g>,
 						);
 					} else if (index === firstPos || index === lastPos) {
 						chordElements.push(
 							<g key={index}>
 								<circle strokeWidth='0.25' stroke='#333' fill='#333' cx={cx} cy={cy} r='4'></circle>
-							</g>
+							</g>,
 						);
 					}
 				}
@@ -79,7 +93,7 @@ const ChordComponent = ({ data }) => {
 			chordElements.push(
 				<g key='barre'>
 					<rect fill='#333' x={barreFirstX} y={barreY} width={barreWidth} height={barreHeight}></rect>
-				</g>
+				</g>,
 			);
 
 			return chordElements;
@@ -104,18 +118,13 @@ const ChordComponent = ({ data }) => {
 		});
 
 		return dots;
-	};
+	}, []);
 
 	// return <div></div>;
 	return (
 		<div className='mb-10'>
 			<h2 className='font-bold text-center'>{formatChordName(data.name)}</h2>
-			<svg
-				width='100%'
-				xmlns='http://www.w3.org/2000/svg'
-				preserveAspectRatio='xMinYMin meet'
-				viewBox='0 0 80 70'
-				style={{ maxWidth: '100%', margin: 'auto' }}>
+			<svg width='100%' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 80 70' style={{maxWidth: '100%', margin: 'auto'}}>
 				<g transform='translate(12, 12)'>
 					{/* 
                         Horizontal line (width = 50, distance = 12, 48 = vertical height)
@@ -150,15 +159,7 @@ const ChordComponent = ({ data }) => {
 						)}
 
 						{/* If chord starts by fret 1 */}
-						{baseFret === 1 && (
-							<path
-								stroke='#333'
-								strokeWidth='2'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								d='M 0 0 H 50'
-							/>
-						)}
+						{baseFret === 1 && <path stroke='#333' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' d='M 0 0 H 50' />}
 						{generateCircle(frets)}
 						{generateDot(chordData)}
 						<g>
@@ -184,6 +185,9 @@ const ChordComponent = ({ data }) => {
 					</g>
 				</g>
 			</svg>
+			<div className='text-center'>
+				<PlayChord guitarChord={chordArr} />
+			</div>
 		</div>
 	);
 };
