@@ -1,25 +1,32 @@
-import './App.css';
 import 'assets/tailwind.css';
-import Chords from 'components/Chords';
-import { useDispatch, useSelector } from 'react-redux';
-import { uiACtions } from 'store/slices/ui';
+import { Route, Routes } from 'react-router-dom';
+import { routes } from 'router';
 
 function App() {
-	const uiState = useSelector((state) => state.ui);
-	const dispatch = useDispatch();
+	// const uiState = useSelector((state) => state.ui);
+	// const dispatch = useDispatch();
 
-	const handleToggle = () => {
-		dispatch(uiACtions.toggleTheme());
-	};
-
+	// const handleToggle = () => {
+	// 	dispatch(uiACtions.toggleTheme());
+	// };
 	return (
-		<>
-			<div>
-				{/* <Chords chordName="Cmajor" /> */}
-				<Chords chordName="Aminor" />
+		<div className='my-10'>
+			<div className='container mx-auto'>
+				<Routes>
+					{routes.map((route, index) => (
+						<Route key={index} path={route.path} element={route.element}>
+							{route.children && (
+								<Routes>
+									{route.children.map((childRoute, childIndex) => (
+										<Route key={childIndex} path={childRoute.path} element={childRoute.element} />
+									))}
+								</Routes>
+							)}
+						</Route>
+					))}
+				</Routes>
 			</div>
-			{/* <div onClick={handleToggle}>Toggle theme</div> */}
-		</>
+		</div>
 	);
 }
 

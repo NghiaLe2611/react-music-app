@@ -26,3 +26,16 @@ export function mapChordToFretPositions(chordFretPositions, tuning) {
 	}
 	return notes;
 }
+
+export function formatChordName(name) {
+	const rootNote = name.charAt(0);
+	const suffix = name.slice(1);
+
+	if (suffix === 'major') {
+		return rootNote;
+	} else if (suffix === 'minor') {
+		return rootNote + 'm';
+	}
+
+	return name;
+}

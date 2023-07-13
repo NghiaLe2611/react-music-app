@@ -36,45 +36,28 @@ const Chords = ({ chordName }) => {
 		});
 	};
 
-	// const generateDot = (item) => {
-	// 	const { frets, fingers } = item;
-	// 	return frets.map((position, index) => {
-	// 		const cx = index * 10;
-	// 		const cy = (position + (position - 1)) * 6;
-
-	// 		if (position > 0) {
-	// 			console.log(fingers[index]);
-	// 			return (
-	// 				<g key={index}>
-	// 					<circle strokeWidth='0.25' stroke='#333' fill='#333' cx={cx} cy={cy} r='4'></circle>
-	// 					<SVGText fill='#fff' fontSize='0.25rem' x={cx} y={cy + 1.5}>
-	// 						{fingers[index]}
-	// 					</SVGText>
-	// 				</g>
-	// 			);
-	// 		}
-
-	// 		return null;
-	// 	});
-	// };
-
 	const generateDot = (item) => {
+		const barreHeight = 8.5;
 		const { frets, fingers, barres } = item;
-		const barre = item.barres[0];
+		const barre = barres[0];
 
 		// Hợp âm chặn
 		if (barre) {
+			let chordElements = [];
 			const firstPos = item.frets.indexOf(barre);
 			const lastPos = item.frets.lastIndexOf(barre);
 			const barreWidth = (lastPos - firstPos) * 10;
-			console.log(firstPos, lastPos);
-			const barreChord = frets.map((position, index) => {
+			const barreY = (barre + (barre - 1)) * 6 - barreHeight/2;
+			const barreFirstX = firstPos * 10;
+			// const barreLastX = lastPos * 10;
+
+			frets.forEach((position, index) => {
 				const cx = index * 10;
 				const cy = (position + (position - 1)) * 6;
 
 				if (position > 0) {
 					if (position !== barre) {
-						return (
+						chordElements.push(
 							<g key={index}>
 								<circle strokeWidth='0.25' stroke='#333' fill='#333' cx={cx} cy={cy} r='4'></circle>
 								<SVGText fill='#fff' fontSize='0.25rem' x={cx} y={cy + 1.5}>
@@ -82,31 +65,24 @@ const Chords = ({ chordName }) => {
 								</SVGText>
 							</g>
 						);
+					} 
+					else if (index === firstPos || index === lastPos) {
+						chordElements.push(
+							<g key={index}>
+								<circle strokeWidth='0.25' stroke='#333' fill='#333' cx={cx} cy={cy} r='4'></circle>
+							</g>
+						);
 					}
-
-					const barreFirstX = firstPos * 10;
-					const barreLastX = lastPos * 10;
-					const barreY = barre * 1.9;
-					console.log(item, barre);
-					return (
-						<g key={index} id={`haha-${index}`}>
-							<circle
-								strokeWidth='0.25'
-								stroke='#333'
-								fill='#333'
-								cx={barreFirstX}
-								cy={cy}
-								r='4'></circle>
-							<rect fill='#333' x={barreFirstX} y={barreY} width={barreWidth} height='8.5'></rect>
-							<circle strokeWidth='0.25' stroke='#333' fill='#333' cx={barreLastX} cy={cy} r='4'></circle>
-						</g>
-					);
 				}
-
-				return null;
 			});
 
-			return barreChord;
+			chordElements.push(
+				<g key='barre'>
+					<rect fill='#333' x={barreFirstX} y={barreY} width={barreWidth} height={barreHeight}></rect>
+				</g>
+			);
+
+			return chordElements;
 		}
 
 		const dots = frets.map((position, index) => {
@@ -209,17 +185,6 @@ const Chords = ({ chordName }) => {
 										</SVGText>
 									</g>
 								</g>
-
-								{/* Dots */}
-								{/* <g>
-									<circle strokeWidth='0.25' stroke='#333' fill='#333' cx='10' cy='30' r='4'></circle>
-								</g>
-								<g>
-									<circle strokeWidth='0.25' stroke='#333' fill='#333' cx='20' cy='18' r='4'></circle>
-								</g>
-								<g>
-									<circle strokeWidth='0.25' stroke='#333' fill='#333' cx='40' cy='6' r='4'></circle>
-								</g> */}
 							</g>
 						</svg>
 					</div>
@@ -230,71 +195,3 @@ const Chords = ({ chordName }) => {
 };
 
 export default Chords;
-
-{
-	/* <svg width='100%' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 80 70'>
-	<g transform='translate(13, 13)'>
-		<g>
-			<path
-				stroke='#333'
-				strokeWidth='0.25'
-				strokeLinecap='square'
-				strokeLinejoin='square'
-				d='M 0 0 H 50 M 0 12 H 50 M 0 24 H 50 M 0 36 H 50 M 0 48 H 50M 0 0 V 48 M 10 0 V 48 M 20 0 V 48 M 30 0 V 48 M 40 0 V 48 M 50 0 V 48'></path>
-			<path
-				stroke='#333'
-				strokeWidth='2'
-				strokeLinecap='round'
-				strokeLinejoin='round'
-				d='M 0 0 H 50'></path>
-			<g>
-				<text fontSize='0.3rem' fill='#333' fontFamily='Verdana' textAnchor='middle' x='0' y='53'>
-					E2
-				</text>
-				<text fontSize='0.3rem' fill='#333' fontFamily='Verdana' textAnchor='middle' x='10' y='53'>
-					A2
-				</text>
-				<text fontSize='0.3rem' fill='#333' fontFamily='Verdana' textAnchor='middle' x='20' y='53'>
-					D3
-				</text>
-				<text fontSize='0.3rem' fill='#333' fontFamily='Verdana' textAnchor='middle' x='30' y='53'>
-					G3
-				</text>
-				<text fontSize='0.3rem' fill='#333' fontFamily='Verdana' textAnchor='middle' x='40' y='53'>
-					B3
-				</text>
-				<text fontSize='0.3rem' fill='#333' fontFamily='Verdana' textAnchor='middle' x='50' y='53'>
-					E4
-				</text>
-			</g>
-		</g>
-		<text fontSize='0.7rem' fill='#333' fontFamily='Verdana' textAnchor='middle' x='0' y='-2'>
-			x
-		</text>
-		<g>
-			<circle strokeWidth='0.25' stroke='#333' fill='#333' cx='10' cy='30' r='4'></circle>
-			<text fontSize='3pt' fontFamily='Verdana' textAnchor='middle' fill='white' x='10' y='31.5'>
-				3
-			</text>
-		</g>
-		<g>
-			<circle strokeWidth='0.25' stroke='#333' fill='#333' cx='20' cy='18' r='4'></circle>
-			<text fontSize='3pt' fontFamily='Verdana' textAnchor='middle' fill='white' x='20' y='19.5'>
-				2
-			</text>
-		</g>
-		<g>
-			<circle strokeWidth='0.25' stroke='#333' fill='transparent' cx='30' cy='-4' r='2'></circle>
-		</g>
-		<g>
-			<circle strokeWidth='0.25' stroke='#333' fill='#333' cx='40' cy='6.5' r='4'></circle>
-			<text fontSize='3pt' fontFamily='Verdana' textAnchor='middle' fill='white' x='40' y='8'>
-				1
-			</text>
-		</g>
-		<g>
-			<circle strokeWidth='0.25' stroke='#333' fill='transparent' cx='50' cy='-4' r='2'></circle>
-		</g>
-	</g>
-</svg> */
-}

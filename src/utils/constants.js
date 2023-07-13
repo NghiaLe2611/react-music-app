@@ -2,6 +2,10 @@ import data from 'data/data.json';
 import { flattenChords } from './helpers';
 
 const parseData = JSON.parse(JSON.stringify(data));
+const keyNames = [
+	'C', 'Csharp', 'D', 'Dsharp', 'E', 'F', 'Fsharp', 'G', 'Ab', 'A', 'Bb', 'B'
+]
+
 
 export const guitarFrets = [
 	// E string
@@ -175,9 +179,38 @@ export const guitarFrets = [
 ];
 
 export const tuning = parseData.tunings.standard;
-export const keys = parseData.keys;
+export const keys = parseData.keys.map((key, index) => {
+	return {
+		key: key,
+		name: keyNames[index]
+	}
+});
+
 export const suffixes = parseData.suffixes;
 export const chords = flattenChords(parseData.chords);
+// export const groupedChords = chords.reduce((acc, chord) => {
+// 	const { key } = chord;
+// 	if (!acc[key]) {
+// 		acc[key] = [];
+// 	}
+// 	acc[key].push(chord);
+
+// 	// Sort the grouped chords by name in ascending order
+// 	// for (const key in acc) {
+// 	// 	acc[key].sort((a, b) => a.name.localeCompare(b.name));
+// 	// }
+
+// 	return acc;
+// }, {});
+
+export const allChords = Object.entries(parseData.chords).flatMap(([key, values]) =>
+	values.map(({ key: valueKey, suffix, positions }) => ({
+		name: `${valueKey}${suffix}`,
+		key: valueKey,
+		suffix,
+		positions: positions.slice(0, 1), // get first item only
+	}))
+);
 
 // https://tombatossals.github.io/react-chords/
 // https://github.com/tombatossals/react-chords
