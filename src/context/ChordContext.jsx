@@ -1,10 +1,10 @@
-import {createContext, useEffect, useRef, useState} from 'react';
-import {instrument} from 'soundfont-player';
+import { createContext, useEffect, useRef, useState } from 'react';
+import { instrument, setMasterGain } from 'soundfont-player';
 
 export const ChordContext = createContext(null);
 
 // Sử dụng audio context chung cho toàn bộ để tránh trường hợp lag nếu có quá nhiều audio context trong chord component
-const ChordProvider = ({children}) => {
+const ChordProvider = ({ children }) => {
 	const [instrumentName, setInstrumentName] = useState('acoustic_guitar_steel');
 	const [player, setPlayer] = useState(null);
 

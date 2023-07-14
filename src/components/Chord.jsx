@@ -16,6 +16,8 @@ const SVGText = styled.text`
 const ChordComponent = ({data}) => {
 	const chordData = data.positions[0];
 	const {frets, baseFret} = chordData;
+	// console.log(chordData.midi);
+
 	const chordArr = useMemo(() => {
 		return frets
 			.map((position, stringIndex) => {
@@ -186,7 +188,9 @@ const ChordComponent = ({data}) => {
 				</g>
 			</svg>
 			<div className='text-center'>
-				<PlayChord guitarChord={chordArr} />
+				{/* <PlayChord guitarChord={chordArr} /> */}
+				<PlayChord guitarChord={chordData.midi} />
+				
 			</div>
 		</div>
 	);

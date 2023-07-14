@@ -2,10 +2,7 @@ import data from 'data/data.json';
 import { flattenChords } from './helpers';
 
 const parseData = JSON.parse(JSON.stringify(data));
-const keyNames = [
-	'C', 'Csharp', 'D', 'Dsharp', 'E', 'F', 'Fsharp', 'G', 'Ab', 'A', 'Bb', 'B'
-]
-
+const keyNames = ['C', 'Csharp', 'D', 'Dsharp', 'E', 'F', 'Fsharp', 'G', 'Ab', 'A', 'Bb', 'B'];
 
 export const guitarFrets = [
 	// E string
@@ -182,8 +179,8 @@ export const tuning = parseData.tunings.standard;
 export const keys = parseData.keys.map((key, index) => {
 	return {
 		key: key,
-		name: keyNames[index]
-	}
+		name: keyNames[index],
+	};
 });
 
 export const suffixes = parseData.suffixes;
@@ -212,9 +209,59 @@ export const allChords = Object.entries(parseData.chords).flatMap(([key, values]
 	}))
 );
 
+function getSemitones(note) {
+	// Map note names to semitone offsets from C
+	const noteMap = {
+		C: 0,
+		'C#': 1,
+		Db: 1,
+		D: 2,
+		'D#': 3,
+		Eb: 3,
+		E: 4,
+		F: 5,
+		'F#': 6,
+		Gb: 6,
+		G: 7,
+		'G#': 8,
+		Ab: 8,
+		A: 9,
+		'A#': 10,
+		Bb: 10,
+		B: 11,
+	};
+
+	// Extract the note name and octave from the input note
+	const [, noteName, octave] = /^([A-G])([#b]?)(\d+)$/.exec(note);
+
+	// Calculate the semitones based on the note name and octave
+	const semitones = noteMap[noteName] + (octave - 4) * 12;
+
+	return semitones;
+}
+
+export function getFrequency(note) {
+	const referenceNote = 440; // Frequency of A4
+	const semitones = getSemitones(note);
+
+	// Calculate the frequency
+	const frequency = referenceNote * Math.pow(2, semitones / 12);
+
+	return frequency;
+}
+
+export const getNoteNameFromMidi = (midiNote) => {
+	const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+	const octave = Math.floor(midiNote / 12) - 1;
+	const noteIndex = midiNote % 12;
+	const noteName = noteNames[noteIndex];
+	return `${noteName}${octave}`;
+};
+
 // https://tombatossals.github.io/react-chords/
 // https://github.com/tombatossals/react-chords
 // https://stackoverflow.com/questions/52511653/drawing-guitar-chords-dynamically
 // https://github.com/tombatossals/chords-db/blob/master/lib/guitar.json
 // https://github.com/T-vK/chord-collection
 // https://gschoppe.com/js/json-chords/
+// https://www.apronus.com/music/onlineguitar.htm
