@@ -68,50 +68,16 @@ const ChordButton = ({ guitarChord }) => {
 		}
 	};
 
-	// const playNote = (note, time) => {
-	// 	return new Promise((resolve) => {
-	// 		setTimeout(async () => {
-	// 			if (player && audioContext) {
-	// 				await player.play(note, audioContext.currentTime);
-	// 				resolve();
-	// 			}
-	// 		}, time);
-	// 	});
-	// };
-
 	const playNote = (note, time) => {
 		return new Promise((resolve) => {
-		  setTimeout(async () => {
-			if (player && audioContext) {
-			  const source = audioContext.createBufferSource();
-			  const gainNode = audioContext.createGain();
-			  const delayNode = audioContext.createDelay();
-			  const feedbackNode = audioContext.createGain();
-			  const wetNode = audioContext.createGain();
-	  
-			  // Set up delay parameters
-			  delayNode.delayTime.value = 0.2; // Adjust the delay time as desired
-			  feedbackNode.gain.value = 0.4; // Adjust the feedback level as desired
-			  wetNode.gain.value = 0.3; // Adjust the wet level as desired
-	  
-			  // Connect the audio nodes
-			  source.buffer = /* Audio buffer for the specific note */;
-			  source.connect(gainNode);
-			  gainNode.connect(delayNode);
-			  gainNode.connect(audioContext.destination);
-			  delayNode.connect(feedbackNode);
-			  feedbackNode.connect(delayNode);
-			  delayNode.connect(wetNode);
-			  wetNode.connect(audioContext.destination);
-	  
-			  // Play the note with the desired timing
-			  source.start(audioContext.currentTime + time);
-	  
-			  resolve();
-			}
-		  }, time);
+			setTimeout(async () => {
+				if (player && audioContext) {
+					await player.play(note, audioContext.currentTime);
+					resolve();
+				}
+			}, time);
 		});
-	  };
+	};
 
 	const playChord = async (chord) => {
 		// if (player && audioContext) {
@@ -119,8 +85,7 @@ const ChordButton = ({ guitarChord }) => {
 		// 	const promises = chord.map((note) => player.play(note, currentTime));
 		// 	await Promise.all(promises);
 		// }
-		const noteNames = chord.map((midiNote) => getNoteNameFromMidi(midiNote));
-		console.log(123, noteNames);
+		// const noteNames = chord.map((midiNote) => getNoteNameFromMidi(midiNote));
 		if (player && audioContext) {
 			const strumDuration = 100; // Adjust the strum duration as desired
 			const delayBetweenNotes = strumDuration / chord.length;

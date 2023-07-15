@@ -209,35 +209,70 @@ export const allChords = Object.entries(parseData.chords).flatMap(([key, values]
 	}))
 );
 
+// function getSemitones(note) {
+// 	// Map note names to semitone offsets from C
+// 	const noteMap = {
+// 		C: 0,
+// 		'C#': 1,
+// 		Db: 1,
+// 		D: 2,
+// 		'D#': 3,
+// 		Eb: 3,
+// 		E: 4,
+// 		F: 5,
+// 		'F#': 6,
+// 		Gb: 6,
+// 		G: 7,
+// 		'G#': 8,
+// 		Ab: 8,
+// 		A: 9,
+// 		'A#': 10,
+// 		Bb: 10,
+// 		B: 11,
+// 	};
+
+// 	// Extract the note name and octave from the input note
+// 	const [, noteName, octave] = /^([A-G][#b]?)(\d+)$/.exec(note);
+// 	// const [, noteName, octave] = /^([A-G])([#b]?)(\d+)$/.exec(note);
+
+// 	// Calculate the semitones based on the note name and octave
+// 	const semitones = noteMap[noteName] + (octave - 4) * 12;
+
+// 	return semitones;
+// }
+
 function getSemitones(note) {
-	// Map note names to semitone offsets from C
-	const noteMap = {
-		C: 0,
-		'C#': 1,
-		Db: 1,
-		D: 2,
-		'D#': 3,
-		Eb: 3,
-		E: 4,
-		F: 5,
-		'F#': 6,
-		Gb: 6,
-		G: 7,
-		'G#': 8,
-		Ab: 8,
-		A: 9,
-		'A#': 10,
-		Bb: 10,
-		B: 11,
-	};
+	if (typeof note === 'number') {
+		// MIDI note format
+		return note - 69;
+	} else if (typeof note === 'string') {
+		// Note name format
+		const noteMap = {
+			C: 0,
+			'C#': 1,
+			Db: 1,
+			D: 2,
+			'D#': 3,
+			Eb: 3,
+			E: 4,
+			F: 5,
+			'F#': 6,
+			Gb: 6,
+			G: 7,
+			'G#': 8,
+			Ab: 8,
+			A: 9,
+			'A#': 10,
+			Bb: 10,
+			B: 11,
+		};
 
-	// Extract the note name and octave from the input note
-	const [, noteName, octave] = /^([A-G])([#b]?)(\d+)$/.exec(note);
-
-	// Calculate the semitones based on the note name and octave
-	const semitones = noteMap[noteName] + (octave - 4) * 12;
-
-	return semitones;
+		const [, noteName, octave] = /^([A-G][#b]?)(\d+)$/.exec(note);
+		const semitones = noteMap[noteName] + (octave - 4) * 12;
+		return semitones;
+	} else {
+		throw new Error('Invalid note format');
+	}
 }
 
 export function getFrequency(note) {
