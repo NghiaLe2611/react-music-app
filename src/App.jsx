@@ -1,4 +1,5 @@
 import 'assets/tailwind.css';
+import Guitar from 'components/Guitar';
 import ChordProvider from 'context/ChordContext';
 import {Route, Routes} from 'react-router-dom';
 import {routes} from 'router';
@@ -12,7 +13,10 @@ function App() {
 	// };
 	return (
 		<ChordProvider>
-			<div className='my-10'>
+			<div className='container mx-auto px-4 md:px-0'>
+				<Guitar />
+			</div>
+			{/* <div className='my-10'>
 				<div className='container mx-auto'>
 					<Routes>
 						{routes.map((route, index) => (
@@ -28,7 +32,7 @@ function App() {
 						))}
 					</Routes>
 				</div>
-			</div>
+			</div> */}
 		</ChordProvider>
 	);
 }
