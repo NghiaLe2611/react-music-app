@@ -300,3 +300,4 @@ export const getNoteNameFromMidi = (midiNote) => {
 // https://github.com/T-vK/chord-collection
 // https://gschoppe.com/js/json-chords/
 // https://www.apronus.com/music/onlineguitar.htm
+// https://www.musicca.com/guitar
